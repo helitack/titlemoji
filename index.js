@@ -43,7 +43,8 @@ async function run() {
       return;
     }
 
-    const emoji = emojiList.gitmojis.find(e => e.name === emojiMapping.emojiName);
+    const emojiObject = emojiList.gitmojis.find(e => e.name === emojiMapping.emojiName);
+    const emoji = emojiObject.emoji;
 
     if (!emoji) {
       core.info(`Could not map an emoji to the following commit type: "${parserResult.type}"`);
