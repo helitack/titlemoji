@@ -70,6 +70,13 @@ async function run() {
 
     core.info(`Conventional commits type: "${parserResult.type}"`);
     core.info(`Setting emoji to: "${emoji}"`);
+
+    await client.pulls.update({
+      owner,
+      repo,
+      pull_number: contextPullRequest.number,
+      title: `${title} ${emoji}`,
+    });
     
   } catch (error) {
     core.setFailed(error.message);
