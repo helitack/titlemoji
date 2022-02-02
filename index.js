@@ -4,7 +4,11 @@ const github = require('@actions/github');
 
 async function run() {
   try {
-    const client = github.getOctokit(process.env.GITHUB_TOKEN)
+    console.log(`GITHUB_TOKEN ${process.env.GITHUB_TOKEN}`);
+    
+    const client = github.getOctokit(process.env.GITHUB_TOKEN);
+    
+    console.log(`client ${client}`);
 
     const contextPullRequest = github.context.payload.pull_request;
     if (!contextPullRequest) {
@@ -13,8 +17,14 @@ async function run() {
       );
     }
 
+    console.log(`contextPullRequest ${contextPullRequest}`);
+    
     const owner = contextPullRequest.base.user.login;
     const repo = contextPullRequest.base.repo.name;
+
+    console.log(`owner ${owner}`);
+    console.log(`repo ${repo}`);
+    console.log(`number ${contextPullRequest.number}`);
 
     const {data: pullRequest} = await client.pulls.get({
       owner,
