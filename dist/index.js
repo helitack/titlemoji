@@ -32906,7 +32906,7 @@ async function run() {
     if(emoji) {
       const originalTitleArray = originalTitle.split(':');
       const originalTitleType = originalTitleArray[0];
-      const originalTitleWithoutType = titleArray.slice(1).join(':');
+      const originalTitleWithoutType = originalTitleArray.slice(1).join(':');
       newTitle = `${originalTitleType} ${emoji} ${originalTitleWithoutType}`;
     }
 
@@ -32917,6 +32917,7 @@ async function run() {
         pull_number: contextPullRequest.number,
         title: newTitle,
       });
+      core.info(`Successfully added an emoji to the title!: "${newTitle}"`);
     }
     
   } catch (error) {
