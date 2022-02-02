@@ -4,14 +4,22 @@ const github = require('@actions/github');
 
 async function run() {
   try {
-    const authToken = core.getInput('github_token', {required: true});
+    const client = github.getOctokit(process.env.GITHUB_TOKEN)
 
-    const client = new github.GitHub(authToken);
+    const contextPullRequest = github.context.payload.pull_request;
+    if (!contextPullRequest) {
+      throw new Error(
+        "This action can only be invoked in `pull_request_target` or `pull_request` events. Otherwise the pull request can't be inferred."
+      );
+    }
+
+    const owner = contextPullRequest.base.user.login;
+    const repo = contextPullRequest.base.repo.name;
 
     const {data: pullRequest} = await client.pulls.get({
       owner,
       repo,
-      pull_number: github.context.payload.pull_request.number
+      pull_number: contextPullRequest.number
     });
 
     const title = pullRequest.title;
