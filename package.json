@@ -1,0 +1,24 @@
+{
+  "name": "titlemoji",
+  "version": "1.0.0",
+  "description": "titlemoji",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/helitack/titlemoji.git"
+  },
+  "keywords": [],
+  "author": "Crispin Hoggarth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/helitack/titlemoji/issues"
+  },
+  "homepage": "https://github.com/helitack/titlemoji#readme",
+  "dependencies": {
+    "@actions/core": "^1.6.0",
+    "@actions/github": "^5.0.0"
+  }
+}
