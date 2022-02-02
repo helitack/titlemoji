@@ -32907,7 +32907,7 @@ async function run() {
       const originalTitleArray = originalTitle.split(':');
       const originalTitleType = originalTitleArray[0];
       const originalTitleWithoutType = originalTitleArray.slice(1).join(':');
-      newTitle = `${originalTitleType} ${emoji} ${originalTitleWithoutType}`;
+      newTitle = `${originalTitleType}: ${emoji}${originalTitleWithoutType}`;
     }
 
     if (newTitle) {
