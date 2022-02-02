@@ -8471,18 +8471,42 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(7440);
 const github = __nccwpck_require__(3241);
 
-try {
-  // `who-to-greet` input defined in action metadata file
-  const nameToGreet = core.getInput('who-to-greet');
-  console.log(`Hello ${nameToGreet}!`);
-  const time = (new Date()).toTimeString();
-  core.setOutput("time", time);
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
-} catch (error) {
-  core.setFailed(error.message);
+
+async function run() {
+  try {
+    const authToken = core.getInput('github_token', {required: true});
+
+    const client = new github.GitHub(authToken);
+
+    const {data: pullRequest} = await client.pulls.get({
+      owner,
+      repo,
+      pull_number: github.context.payload.pull_request.number
+    });
+
+    const title = pullRequest.title;
+
+    core.info(`Pull Request title: "${title}"`);
+    console.log(`Title Console Log: ${title}`);
+    
+  
+  
+  
+    // `who-to-greet` input defined in action metadata file
+    const nameToGreet = core.getInput('who-to-greet');
+    console.log(`Hello ${nameToGreet}!`);
+    const time = (new Date()).toTimeString();
+    core.setOutput("time", time);
+    // Get the JSON webhook payload for the event that triggered the workflow
+    const payload = JSON.stringify(github.context.payload, undefined, 2)
+    console.log(`The event payload: ${payload}`);
+  } catch (error) {
+    core.setFailed(error.message);
+  }
 }
+
+
+run();
 })();
 
 module.exports = __webpack_exports__;
