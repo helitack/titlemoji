@@ -24,59 +24,50 @@ async function run() {
       pull_number: contextPullRequest.number
     });
 
-    const title = pullRequest.title;
-    core.info(`Pull Request title: "${title}"`);
+    const originalTitle = pullRequest.title;
+    core.info(`Pull Request title: "${originalTitle}"`);
 
     const { parserOpts } = await conventionalCommitsConfig();
-    const parserResult = parser(title, parserOpts);
+    const parserResult = parser(originalTitle, parserOpts);
 
     if (!parserResult.type) {
-      core.info(`No conventional commits type found in title: "${title}"`);
+      core.info(`No conventional commits type found in title: "${originalTitle}"`);
       return;
     }
 
     let emoji = '';
     switch(parserResult.type) {
       case 'feat':
-        emoji = ':sparkles:';
+        emoji = '✨';
         break;
       case 'fix':
-        emoji = ':bug:';
-        break;
-      case 'docs':
-        emoji = ':books:';
-        break;
-      case 'style':
-        emoji = ':art:';
-        break;
-      case 'refactor':
-        emoji = ':recycle:';
-        break;
-      case 'perf':
-        emoji = ':zap:';
-        break;
-      case 'test':
-        emoji = ':fire:';
-        break;
-      case 'chore':
-        emoji = ':construction:';
-        break;
-      case 'revert':
-        emoji = ':rewind:';
+        emoji = '🐛';
         break;
       default:
-        emoji = ':question:';
+        emoji = '';
     }
 
-    core.info(`Conventional commits type: "${parserResult.type}"`);
-    core.info(`Setting emoji to: "${emoji}"`);
+    if (originalTitle.includes(emoji)) {
+      core.info(`Title already includes the ${emoji} emoji: "${originalTitle}"`);
+      return;
+    }
 
-    await client.pulls.update({
-      owner,
-      repo,
-      pull_number: contextPullRequest.number,
-      title: `${title} ${emoji}`,
-    });
+    let newTitle = null;
+    if(emoji) {
+      const originalTitleArray = originalTitle.split(':');
+      const originalTitleType = originalTitleArray[0];
+      const originalTitleWithoutType = originalTitleArray.slice(1).join(':');
+      newTitle = `${originalTitleType} ${emoji} ${originalTitleWithoutType}`;
+    }
+
+    if (newTitle) {
+      await client.pulls.update({
+        owner,
+        repo,
+        pull_number: contextPullRequest.number,
+        title: newTitle,
+      });
+    }
     
   } catch (error) {
     core.setFailed(error.message);
