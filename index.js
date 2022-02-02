@@ -2,6 +2,8 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const conventionalCommitsConfig = require('conventional-changelog-conventionalcommits');
 const parser = require('conventional-commits-parser').sync;
+const config = require('./config.js');
+const emojiList = require('./emoji.js');
 
 
 async function run() {
@@ -35,16 +37,18 @@ async function run() {
       return;
     }
 
-    let emoji = '';
-    switch(parserResult.type) {
-      case 'feat':
-        emoji = '✨';
-        break;
-      case 'fix':
-        emoji = '🐛';
-        break;
-      default:
-        emoji = '';
+    const emojiMapping = config.emojiNameMappings.find(m => m.type === parserResult.type);
+
+    if (!emojiMapping) {
+      core.info(`No Mapping was found for the commit type: "${parserResult.type}"`);
+      return;
+    }
+
+    const emoji = emojiList.gitmojis.find(e => e.name === emojiMapping.emojiName);
+
+    if (!emoji) {
+      core.info(`Could not map an emoji to the following commit type: "${parserResult.type}"`);
+      return;
     }
 
     if (originalTitle.includes(emoji)) {
