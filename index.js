@@ -27,7 +27,6 @@ async function run() {
     });
 
     const originalTitle = pullRequest.title;
-    core.info(`Pull Request title: "${originalTitle}"`);
 
     const { parserOpts } = await conventionalCommitsConfig();
     const parserResult = parser(originalTitle, parserOpts);

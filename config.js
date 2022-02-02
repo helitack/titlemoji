@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   emojiNameMappings: [
     { type: "feat", emojiName: "sparkles"},
     { type: "fix", emojiName: "bug"},
