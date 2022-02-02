@@ -33383,6 +33383,9 @@ async function run() {
 
     const originalTitle = pullRequest.title;
 
+    const branch = pullRequest.head.ref;
+    console.log(`Branch: ${branch}`);
+
     const { parserOpts } = await conventionalCommitsConfig();
     const parserResult = parser(originalTitle, parserOpts);
 
